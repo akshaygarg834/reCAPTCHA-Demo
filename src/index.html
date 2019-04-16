@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>reCAPTCHA Demo v3</title>
+    <meta charset="UTF-8" />
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lfx9JoUAAAAAOHf0pQafcxL6BKl_Y1ixRpfrJ0G"></script>
+    <script>
+      function myclick(e) {
+        try {
+          grecaptcha.ready(function() {
+            grecaptcha
+              .execute("6Lfx9JoUAAAAAOHf0pQafcxL6BKl_Y1ixRpfrJ0G", {
+                action: "login"
+              })
+              .then(function(token) {
+                console.log(token);
+                fetch("https://0411mm264v.sse.codesandbox.io/registration", {
+                  method: "post",
+                  mode: "cors",
+                  body: JSON.stringify({ token })
+                })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(data) {
+                    console.log(data);
+                    document.getElementById("results").innerHTML =
+                      data.score < 0.5 ? "ROBOT" : "HUMAN";
+                    alert(data.score < 0.5 ? "ROBOT" : "HUMAN");
+                  });
+              });
+          });
+        } catch (e) {}
+      }
+    </script>
+    <style>
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        margin-top: 100px;
+      }
+      body {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <table>
+        <tr>
+          <td>Name :</td>
+          <td><input type="text" /></td>
+        </tr>
+        <tr>
+          <td>Email :</td>
+          <td><input type="email" /></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><button id="homepage" onclick="myclick()">LOGIN</button></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><div id="results"></div></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
